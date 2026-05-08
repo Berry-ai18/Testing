@@ -44,6 +44,7 @@ class TestSmoke:
         assert 'bookingdates' in data
         assert 'checkin' in data['bookingdates']
         assert 'checkout' in data['bookingdates']
+        assert isinstance(data, dict)
 
     def test_get_invalid_booking(self, base_url):
         # Verify that requesting a non-existent booking ID returns 404
@@ -81,3 +82,48 @@ class TestSmoke:
         assert response.status_code == 200
         assert 'additionalneeds' in response.json()
         assert 'spa' in response.json()['additionalneeds']
+
+    # NOTE: API returns 403 instead of expected 401 Bad Request for missing fields
+    # In a properly designed API, missing required auth should return 401
+    def test_put_booking_noauth(self, base_url, create_post):
+        payload_update = {
+            "firstname": "Patrik",
+            "lastname": "Tichy",
+            "totalprice": 220,
+            "depositpaid": True,
+            "bookingdates": {
+                "checkin": "2025-01-04",
+                "checkout": "2025-01-12"
+            },
+            "additionalneeds": "spa"
+        }
+        response = requests.put(base_url + f'/booking/{create_post}', json = payload_update)
+        assert response.status_code == 403
+    
+    def test_patch_booking(self, base_url, create_post, auth_token):
+        response = requests.patch(base_url + f"/booking/{create_post}", headers = {'Cookie': f'token={auth_token}'}, json = {'firstname':'Boris', 'lastname':'Crazy'})
+        assert response.status_code == 200
+        data = response.json()
+        assert 'firstname' in data
+        assert 'lastname' in data
+        assert 'Boris' in data['firstname']
+        assert 'Crazy' in data['lastname']
+
+    def test_patch_noauth(self, base_url, create_post):
+        response = requests.patch(base_url + f'/booking/{create_post}', json =  {'firstname':'Boris', 'lastname':'Crazy'})
+        assert response.status_code == 403
+
+    def test_delete_booking(self, base_url, create_post, auth_token):
+        response = requests.delete(base_url + f"/booking/{create_post}", headers = {'Cookie': f'token={auth_token}'})
+        assert response.status_code == 201
+        verify = requests.get(base_url + f'/booking/{create_post}')
+        assert verify.status_code == 404
+
+    def test_delete_booking_noauth(self, base_url, create_post):
+        response = requests.delete(base_url + f"/booking/{create_post}")
+        assert response.status_code == 403
+
+
+    def test_delete_booking_invalidid(self,base_url,auth_token):
+        response = requests.delete(base_url + f"/booking/9999999", headers = {'Cookie': f'token={auth_token}'})
+        assert response.status_code == 405
