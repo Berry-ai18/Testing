@@ -13,3 +13,21 @@ def auth_token(base_url):
     assert response.status_code == 200
     return response.json().get("token")
 
+@pytest.fixture(scope="session")
+def create_post(base_url):
+    payload = {
+            "firstname": "Patrik",
+            "lastname": "Tichy",
+            "totalprice": 220,
+            "depositpaid": True,
+            "bookingdates": {
+                "checkin": "2025-01-04",
+                "checkout": "2025-01-12"
+            }
+    }
+    response = requests.post(base_url + '/booking', json=payload)
+    data =  response.json()
+    assert response.status_code == 200
+    assert 'bookingid' in data
+    booking_id = data['bookingid']
+    return booking_id
