@@ -1,7 +1,7 @@
 import requests
 import pytest
 
-
+# Shared fixtures for all restful-booker tests
 @pytest.fixture(scope="session")
 def base_url():
     return "https://restful-booker.herokuapp.com"
