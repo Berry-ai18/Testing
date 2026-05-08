@@ -62,3 +62,22 @@ class TestSmoke:
         }
         response = requests.post(base_url + '/booking', json=payload)
         assert response.status_code == 500
+    
+    def test_update_booking_needs(self, base_url, auth_token, create_post):
+        payload_update = {
+            "firstname": "Patrik",
+            "lastname": "Tichy",
+            "totalprice": 220,
+            "depositpaid": True,
+            "bookingdates": {
+                "checkin": "2025-01-04",
+                "checkout": "2025-01-12"
+            },
+            "additionalneeds": "spa"
+        }
+        response = requests.put(base_url + f"/booking/{create_post}", headers = {'Cookie': f'token={auth_token}'},
+                                json = payload_update)
+        
+        assert response.status_code == 200
+        assert 'additionalneeds' in response.json()
+        assert 'spa' in response.json()['additionalneeds']
