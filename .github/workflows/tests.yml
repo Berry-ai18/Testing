@@ -23,7 +23,7 @@ jobs:
         run: pip install -r restful-booker/requirements.txt
 
       - name: Run tests
-        run: pytest restful-booker/ --html=report.html --self-contained-html
+        run: pytest restful-booker/ --html=restful-booker/report.html --self-contained-html
 
       - name: Upload test report
         uses: actions/upload-artifact@v4
