@@ -1,5 +1,6 @@
 import pytest
 import requests
+from jsonschema import validate
 
 
 class TestSmoke:
@@ -132,3 +133,28 @@ class TestSmoke:
         response = requests.delete(
             base_url + f"/booking/9999999", headers={'Cookie': f'token={auth_token}'})
         assert response.status_code == 405
+
+    def test_booking_by_id_json(self, base_url, create_post):
+        response = requests.get(base_url + f'/booking/{create_post}')
+        assert response.status_code == 200
+
+        schema = {
+            "type": "object",
+            "required": ["firstname", "lastname", "totalprice", "depositpaid", "bookingdates"],
+            "properties": {
+                "firstname": {"type": "string"},
+                "lastname": {"type": "string"},
+                "totalprice": {"type": "integer"},
+                "depositpaid": {"type": "boolean"},
+                "bookingdates": {
+                    "type": "object",
+                    "required": ["checkin", "checkout"],
+                    "properties": {
+                        "checkin": {"type": "string"},
+                        "checkout": {"type": "string"}
+                    }
+                }
+            }
+        }
+
+        validate(instance=response.json(), schema=schema)
