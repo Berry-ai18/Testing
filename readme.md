@@ -18,6 +18,11 @@ Tests run automatically on every push via GitHub Actions with an HTML report gen
 
 ### playwright — UI End-to-End Testing
 
+UI test suite against [Saucedemo](https://www.saucedemo.com) built with Playwright.
+Covers login flows, inventory validation, and end-to-end user journeys across Chrome, Firefox and Safari.
+
+**Tech:** Playwright · JavaScript · GitHub Actions
+
 ---
 
 ### k6 — Performance Testing
@@ -30,4 +35,4 @@ Tests run automatically on every push via GitHub Actions with an HTML report gen
 | -------------- | -------------- |
 | restful-booker | ✅ Complete    |
 | playwright     | 🚧 In progress |
-| k6             | 🚧 In progress |
+| k6             | 🚧 Not started |

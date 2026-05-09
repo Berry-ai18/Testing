@@ -22,4 +22,28 @@ test.describe('Login', () => {
         await page.click('[data-test="login-button"]')
         await expect(page.locator('[data-test="error"]')).toBeVisible()
     })
+
+    test('After login products are visible', async ({ page }) => {
+        await page.goto('https://www.saucedemo.com/')
+        await page.fill('#user-name', 'standard_user')
+        await page.fill('#password', 'secret_sauce')
+        await page.click('[data-test="login-button"]')
+        await expect(page.locator('[data-test="inventory-item-sauce-labs-backpack-img"]')).toBeVisible()
+    })
+
+    test('Verify product count is correct', async ({ page }) => {
+        await page.goto('https://www.saucedemo.com/')
+        await page.fill('#user-name', 'standard_user')
+        await page.fill('#password', 'secret_sauce')
+        await page.click('[data-test="login-button"]')
+        await expect(page.locator('[data-test="inventory-item"]')).toHaveCount(6)
+    })
+
+    test('Verify product name is visible', async ({ page }) => {
+        await page.goto('https://www.saucedemo.com/')
+        await page.fill('#user-name', 'standard_user')
+        await page.fill('#password', 'secret_sauce')
+        await page.click('[data-test="login-button"]')
+        await expect(page.locator('[data-test="inventory-item-name"]')).toBeVisible
+    })
 })
