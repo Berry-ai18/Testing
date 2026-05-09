@@ -2,19 +2,36 @@
 
 A collection of test automation projects built while learning QA engineering.
 
-## Structure
+---
 
-- `restful-booker/` — API test suite built with pytest against the Restful-Booker API
-- `playwright/` — UI end-to-end tests built with Playwright
-- `k6/` — Performance/load tests
+## Projects
 
-## Tech Stack
+### restful-booker — API Testing with pytest
 
-- Python / pytest
-- Playwright
-- k6
-- GitHub Actions (CI/CD)
+REST API test suite against the [Restful-Booker](https://restful-booker.herokuapp.com) booking API.
+Covers full CRUD, auth token handling, negative tests, schema validation with jsonschema, and documented API quirks.
+Tests run automatically on every push via GitHub Actions with an HTML report generated on each run.
+
+**Tech:** Python · pytest · requests · jsonschema · pytest-html · GitHub Actions
+
+---
+
+### playwright — UI End-to-End Testing
+
+_Coming soon_
+
+---
+
+### k6 — Performance Testing
+
+_Coming soon_
+
+---
 
 ## Status
 
-🚧 In progress
+| Project        | Status         |
+| -------------- | -------------- |
+| restful-booker | ✅ Complete    |
+| playwright     | 🚧 In progress |
+| k6             | 🚧 In progress |
