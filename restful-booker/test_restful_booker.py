@@ -118,22 +118,6 @@ class TestSmoke:
             base_url + f'/booking/{create_post}', json={'firstname': 'Boris', 'lastname': 'Crazy'})
         assert response.status_code == 403
 
-    def test_delete_booking(self, base_url, create_post, auth_token):
-        response = requests.delete(
-            base_url + f"/booking/{create_post}", headers={'Cookie': f'token={auth_token}'})
-        assert response.status_code == 201
-        verify = requests.get(base_url + f'/booking/{create_post}')
-        assert verify.status_code == 404
-
-    def test_delete_booking_noauth(self, base_url, create_post):
-        response = requests.delete(base_url + f"/booking/{create_post}")
-        assert response.status_code == 403
-
-    def test_delete_booking_invalidid(self, base_url, auth_token):
-        response = requests.delete(
-            base_url + f"/booking/9999999", headers={'Cookie': f'token={auth_token}'})
-        assert response.status_code == 405
-
     def test_booking_by_id_json(self, base_url, create_post):
         response = requests.get(base_url + f'/booking/{create_post}')
         assert response.status_code == 200
@@ -158,3 +142,19 @@ class TestSmoke:
         }
 
         validate(instance=response.json(), schema=schema)
+
+    def test_delete_booking(self, base_url, create_post, auth_token):
+        response = requests.delete(
+            base_url + f"/booking/{create_post}", headers={'Cookie': f'token={auth_token}'})
+        assert response.status_code == 201
+        verify = requests.get(base_url + f'/booking/{create_post}')
+        assert verify.status_code == 404
+
+    def test_delete_booking_noauth(self, base_url, create_post):
+        response = requests.delete(base_url + f"/booking/{create_post}")
+        assert response.status_code == 403
+
+    def test_delete_booking_invalidid(self, base_url, auth_token):
+        response = requests.delete(
+            base_url + f"/booking/9999999", headers={'Cookie': f'token={auth_token}'})
+        assert response.status_code == 405
