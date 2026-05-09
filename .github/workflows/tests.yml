@@ -1,4 +1,4 @@
-name: Restful Booker API Tests
+name: Testing Portfolio CI
 
 on:
   push:
@@ -7,9 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  pytest:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,3 +29,32 @@ jobs:
         with:
           name: pytest-report
           path: restful-booker/report.html
+
+  playwright:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: playwright
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: playwright
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        working-directory: playwright
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright/playwright-report/

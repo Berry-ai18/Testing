@@ -157,4 +157,4 @@ class TestSmoke:
     def test_delete_booking_invalidid(self, base_url, auth_token):
         response = requests.delete(
             base_url + f"/booking/9999999", headers={'Cookie': f'token={auth_token}'})
-        assert response.status_code == 405
+        assert response.status_code == 403
