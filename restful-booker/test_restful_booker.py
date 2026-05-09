@@ -1,6 +1,7 @@
 import pytest
 import requests
 
+
 class TestSmoke:
     def test_ping_wakeup(self, base_url):
         # Verify the API is alive and responding before running other tests
@@ -63,7 +64,7 @@ class TestSmoke:
         }
         response = requests.post(base_url + '/booking', json=payload)
         assert response.status_code == 500
-    
+
     def test_update_booking_needs(self, base_url, auth_token, create_post):
         payload_update = {
             "firstname": "Patrik",
@@ -76,9 +77,9 @@ class TestSmoke:
             },
             "additionalneeds": "spa"
         }
-        response = requests.put(base_url + f"/booking/{create_post}", headers = {'Cookie': f'token={auth_token}'},
-                                json = payload_update)
-        
+        response = requests.put(base_url + f"/booking/{create_post}", headers={'Cookie': f'token={auth_token}'},
+                                json=payload_update)
+
         assert response.status_code == 200
         assert 'additionalneeds' in response.json()
         assert 'spa' in response.json()['additionalneeds']
@@ -97,11 +98,13 @@ class TestSmoke:
             },
             "additionalneeds": "spa"
         }
-        response = requests.put(base_url + f'/booking/{create_post}', json = payload_update)
+        response = requests.put(
+            base_url + f'/booking/{create_post}', json=payload_update)
         assert response.status_code == 403
-    
+
     def test_patch_booking(self, base_url, create_post, auth_token):
-        response = requests.patch(base_url + f"/booking/{create_post}", headers = {'Cookie': f'token={auth_token}'}, json = {'firstname':'Boris', 'lastname':'Crazy'})
+        response = requests.patch(base_url + f"/booking/{create_post}", headers={
+                                  'Cookie': f'token={auth_token}'}, json={'firstname': 'Boris', 'lastname': 'Crazy'})
         assert response.status_code == 200
         data = response.json()
         assert 'firstname' in data
@@ -110,11 +113,13 @@ class TestSmoke:
         assert 'Crazy' in data['lastname']
 
     def test_patch_noauth(self, base_url, create_post):
-        response = requests.patch(base_url + f'/booking/{create_post}', json =  {'firstname':'Boris', 'lastname':'Crazy'})
+        response = requests.patch(
+            base_url + f'/booking/{create_post}', json={'firstname': 'Boris', 'lastname': 'Crazy'})
         assert response.status_code == 403
 
     def test_delete_booking(self, base_url, create_post, auth_token):
-        response = requests.delete(base_url + f"/booking/{create_post}", headers = {'Cookie': f'token={auth_token}'})
+        response = requests.delete(
+            base_url + f"/booking/{create_post}", headers={'Cookie': f'token={auth_token}'})
         assert response.status_code == 201
         verify = requests.get(base_url + f'/booking/{create_post}')
         assert verify.status_code == 404
@@ -123,7 +128,7 @@ class TestSmoke:
         response = requests.delete(base_url + f"/booking/{create_post}")
         assert response.status_code == 403
 
-
-    def test_delete_booking_invalidid(self,base_url,auth_token):
-        response = requests.delete(base_url + f"/booking/9999999", headers = {'Cookie': f'token={auth_token}'})
+    def test_delete_booking_invalidid(self, base_url, auth_token):
+        response = requests.delete(
+            base_url + f"/booking/9999999", headers={'Cookie': f'token={auth_token}'})
         assert response.status_code == 405
