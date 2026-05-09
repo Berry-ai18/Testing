@@ -1,0 +1,144 @@
+# Playwright Cheat Sheet
+
+---
+
+## Basic Test Structure
+
+```javascript
+import { test, expect } from '@playwright/test'
+
+test('test name', async ({ page }) => {
+    // your test here
+})
+
+test.describe('group name', () => {
+    test('test 1', async ({ page }) => {})
+    test('test 2', async ({ page }) => {})
+})
+```
+
+---
+
+## Navigation
+
+```javascript
+await page.goto('https://example.com')          // open URL
+await page.goBack()                              // browser back
+await page.goForward()                           // browser forward
+await page.reload()                              // refresh page
+```
+
+---
+
+## Finding Elements
+
+```javascript
+// By CSS selector — familiar from Cypress
+page.locator('#id')
+page.locator('.class')
+page.locator('button')
+page.locator('[data-test="submit"]')
+
+// By text
+page.getByText('Login')
+page.getByLabel('Username')
+page.getByPlaceholder('Enter email')
+page.getByRole('button', { name: 'Submit' })
+
+// By test id
+page.getByTestId('login-button')                // looks for data-testid attribute
+```
+
+---
+
+## Actions
+
+```javascript
+await page.click('#login-button')               // click
+await page.fill('#username', 'admin')           // clear and type
+await page.type('#username', 'admin')           // type without clearing
+await page.press('#username', 'Enter')          // press a key
+await page.selectOption('#dropdown', 'value')   // select dropdown option
+await page.check('#checkbox')                   // check a checkbox
+await page.uncheck('#checkbox')                 // uncheck a checkbox
+await page.hover('#menu-item')                  // hover over element
+await page.screenshot({ path: 'shot.png' })    // take screenshot
+```
+
+---
+
+## Assertions (expect)
+
+```javascript
+await expect(page).toHaveURL('https://example.com/dashboard')
+await expect(page).toHaveTitle('Dashboard')
+
+await expect(locator).toBeVisible()
+await expect(locator).toBeHidden()
+await expect(locator).toBeEnabled()
+await expect(locator).toBeDisabled()
+await expect(locator).toHaveText('Welcome')
+await expect(locator).toContainText('Welcome')
+await expect(locator).toHaveValue('admin')
+await expect(locator).toHaveCount(5)            // number of elements
+```
+
+---
+
+## Hooks (same idea as pytest fixtures)
+
+```javascript
+test.beforeEach(async ({ page }) => {
+    await page.goto('https://example.com')      // runs before every test
+})
+
+test.afterEach(async ({ page }) => {
+    // cleanup after every test
+})
+
+test.beforeAll(async () => {
+    // runs once before all tests in the file
+})
+
+test.afterAll(async () => {
+    // runs once after all tests in the file
+})
+```
+
+---
+
+## Commands
+
+```bash
+npx playwright test                        # run all tests
+npx playwright test login.spec.js          # run one file
+npx playwright test --headed               # show the browser
+npx playwright test --project=chromium     # Chrome only
+npx playwright test --debug               # step through test
+npx playwright show-report                 # open HTML report
+npx playwright codegen https://example.com # record a test
+```
+
+---
+
+## Cypress vs Playwright — Quick Comparison
+
+| Cypress | Playwright |
+|---------|------------|
+| `cy.visit()` | `page.goto()` |
+| `cy.get('#id')` | `page.locator('#id')` |
+| `cy.click()` | `page.click()` |
+| `cy.type()` | `page.fill()` |
+| `cy.contains()` | `page.getByText()` |
+| `should('be.visible')` | `expect(locator).toBeVisible()` |
+| `should('have.text')` | `expect(locator).toHaveText()` |
+| Chrome only by default | Chrome, Firefox, Safari |
+
+---
+
+## Practice Site
+
+**saucedemo.com**
+- Username: `standard_user`
+- Password: `secret_sauce`
+- Has login, inventory, cart, checkout — good for full E2E flows
