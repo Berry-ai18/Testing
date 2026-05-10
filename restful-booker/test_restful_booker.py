@@ -1,6 +1,6 @@
 import pytest
 import requests
-from jsonschema import validate
+from jsonschema import validate # type: ignore
 
 
 class TestSmoke:
