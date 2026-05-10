@@ -1,30 +1,31 @@
 import { test, expect } from '@playwright/test'
+import LoginPage from '../pages/LoginPage.js'
+
 
 
 test.describe('Login — negative', () => {
 
     test('Login with wrong password', async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/')
-        await page.fill('#user-name', 'standard_user')
-        await page.fill('#password', 'wrongpassxdddd')
-        await page.click('[data-test="login-button"]')
+        const loginPage = new LoginPage(page)
+        await loginPage.goto()
+        await loginPage.login('standard_user', 'wrongpassxddddd')
         await expect(page.locator('[data-test="error"]')).toBeVisible()
     })
 
     test('Login with no credentials at all', async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/')
-        await page.click('[data-test="login-button"]')
-        await expect(page.locator('[data-test="error"]')).toBeVisible()
+        const loginPage = new LoginPage(page)
+        await loginPage.goto()
+        await loginPage.loginButton.click()
+        await expect(loginPage.errorMessage).toBeVisible()
     })
 
 })
 
 test.describe('Inventory', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/')
-        await page.fill('#user-name', 'standard_user')
-        await page.fill('#password', 'secret_sauce')
-        await page.click('[data-test="login-button"]')
+        const loginPage = new LoginPage(page)
+        await loginPage.goto()
+        await loginPage.login('standard_user', 'secret_sauce')
         await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
     })
 
