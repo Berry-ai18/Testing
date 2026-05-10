@@ -20,7 +20,7 @@ Tests run automatically on every push via GitHub Actions with an HTML report gen
 
 UI test suite against [Saucedemo](https://www.saucedemo.com) built with Playwright.
 Covers login flows, inventory validation, cart management and full checkout flow across Chrome, Firefox and Safari.
-Currently being refactored to use Page Object Model and beforeEach hooks.
+Organised using Page Object Model for maintainability.
 
 **Tech:** Playwright · JavaScript · GitHub Actions
 
@@ -30,10 +30,3 @@ Currently being refactored to use Page Object Model and beforeEach hooks.
 
 ---
 
-## Status
-
-| Project        | Status         |
-| -------------- | -------------- |
-| restful-booker | ✅ Complete    |
-| playwright     | 🚧 In progress |
-| k6             | 🚧 Not started |
