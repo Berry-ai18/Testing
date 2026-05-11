@@ -27,6 +27,12 @@ Organised using Page Object Model for maintainability.
 ---
 
 ### k6 — Performance Testing
+Load and performance test suite against the Restful-Booker API.
+Covers smoke, load and stress testing scenarios with thresholds.
+
+**Tech:** k6 · JavaScript
+
+*In progress*
 
 ---
 
