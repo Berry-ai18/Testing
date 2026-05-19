@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import LoginPage from '../pages/LoginPage.js'
+import CheckoutPage from '../pages/CheckoutPage.js'
 
 
 
@@ -9,7 +10,7 @@ test.describe('Login — negative', () => {
         const loginPage = new LoginPage(page)
         await loginPage.goto()
         await loginPage.login('standard_user', 'wrongpassxddddd')
-        await expect(page.locator('[data-test="error"]')).toBeVisible()
+        await expect(loginPage.errorMessage).toBeVisible()
     })
 
     test('Login with no credentials at all', async ({ page }) => {
@@ -55,34 +56,33 @@ test.describe('Inventory', () => {
     })
 
     test('Full lifecycle on e-commerce website', async ({ page }) => {
+        const checkoutPage = new CheckoutPage(page)
         await page.click('#add-to-cart-sauce-labs-backpack')
         await expect(page.locator('[data-test="shopping-cart-badge"]')).toBeVisible()
         await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('1')
         await page.click('[data-test="shopping-cart-link"]')
         await expect(page.locator('[data-test="title"]')).toBeVisible()
         await page.click('[data-test="checkout"]')
-        await page.fill('[data-test="firstName"]', 'Patrik')
-        await page.fill('[data-test="lastName"]', 'Tichy')
-        await page.fill('[data-test="postalCode"]', '04001')
-        await page.click('[data-test="continue"]')
+        await checkoutPage.fillCheckoutForm('Patrik', 'Tichy', '04013')
+        await checkoutPage.continue()
         await expect(page.locator('[data-test="total-info-label"]')).toBeVisible()
-        await page.click('[data-test="finish"]')
+        await checkoutPage.finish()
         await expect(page.locator('[data-test="complete-header"]')).toBeVisible()
         await page.click('[data-test="back-to-products"]')
         await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
     })
 
     test('Full lifecycle on e-commerce website with 1 field not filled in the checkout', async ({ page }) => {
+        const checkoutPage = new CheckoutPage(page)
         await page.click('#add-to-cart-sauce-labs-backpack')
         await expect(page.locator('[data-test="shopping-cart-badge"]')).toBeVisible()
         await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('1')
         await page.click('[data-test="shopping-cart-link"]')
         await expect(page.locator('[data-test="title"]')).toBeVisible()
         await page.click('[data-test="checkout"]')
-        await page.fill('[data-test="firstName"]', 'Patrik')
-        await page.fill('[data-test="lastName"]', 'Tichy')
-        await page.click('[data-test="continue"]')
-        await expect(page.locator('[data-test="error-button"]')).toBeVisible()
+        await checkoutPage.fillCheckoutForm('Patrik', 'Tichy')
+        await checkoutPage.continue()
+        await expect(checkoutPage.errorButton).toBeVisible()
     })
 
 })
